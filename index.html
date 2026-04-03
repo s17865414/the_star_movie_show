@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Star Movie Show</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:black;
+color:white;
+text-align:center;
+}
+
+header{
+position:fixed;
+top:0;
+width:100%;
+background:#111;
+padding:10px;
+z-index:10;
+}
+
+h1{
+margin:5px;
+color:#00ffd5;
+}
+
+#feed{
+margin-top:160px;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:40px;
+}
+
+video{
+width:320px;
+height:520px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.videoCard{
+position:relative;
+}
+
+.actions{
+display:flex;
+gap:10px;
+margin-top:5px;
+justify-content:center;
+}
+
+button{
+padding:6px 12px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+.like{
+background:red;
+color:white;
+}
+
+.comment{
+font-size:12px;
+margin-top:3px;
+}
+
+input{
+padding:6px;
+border-radius:5px;
+border:none;
+margin:3px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>The Star Movie Show</h1>
+
+<div>
+<input id="username" placeholder="Enter username">
+<button onclick="login()">Login</button>
+</div>
+
+<br>
+
+<input type="file" id="upload" accept="video/*">
+
+</header>
+
+<div id="feed"></div>
+
+<script>
+
+let user=null
+
+function login(){
+
+const name=document.getElementById("username").value
+
+if(name){
+
+user=name
+alert("Logged in as "+name)
+
+}
+
+}
+
+const upload=document.getElementById("upload")
+const feed=document.getElementById("feed")
+
+upload.addEventListener("change",function(){
+
+const file=this.files[0]
+
+if(!file)return
+
+const url=URL.createObjectURL(file)
+
+createVideo(url)
+
+})
+
+function createVideo(src){
+
+const card=document.createElement("div")
+card.className="videoCard"
+
+const video=document.createElement("video")
+video.src=src
+video.controls=true
+video.loop=true
+
+let likes=0
+
+const likeBtn=document.createElement("button")
+likeBtn.className="like"
+likeBtn.innerText="❤️ 0"
+
+likeBtn.onclick=()=>{
+
+likes++
+likeBtn.innerText="❤️ "+likes
+
+}
+
+const actions=document.createElement("div")
+actions.className="actions"
+
+actions.appendChild(likeBtn)
+
+const commentInput=document.createElement("input")
+commentInput.placeholder="write comment"
+
+const commentBtn=document.createElement("button")
+commentBtn.innerText="Send"
+
+const comments=document.createElement("div")
+
+commentBtn.onclick=()=>{
+
+if(!user){
+
+alert("login first")
+return
+
+}
+
+const text=commentInput.value
+
+if(text){
+
+const c=document.createElement("div")
+c.className="comment"
+c.innerText=user+": "+text
+
+comments.appendChild(c)
+
+commentInput.value=""
+
+}
+
+}
+
+card.appendChild(video)
+card.appendChild(actions)
+card.appendChild(commentInput)
+card.appendChild(commentBtn)
+card.appendChild(comments)
+
+feed.prepend(card)
+
+}
+
+</script>
+
+</body>
+</html>
